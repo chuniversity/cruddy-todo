@@ -7,12 +7,33 @@ var items = {};
 
 // Public API - Fix these CRUD functions ///////////////////////////////////////
 
-exports.create = (text, callback) => {
-  var id = counter.getNextUniqueId();
-  items[id] = text;
-  callback(null, { id, text });
-};
+/*
+for callback it's err first
+Todo.readOne(req.params.id, (err, todo) => {
+  if (todo) {
+    res.status(200).json(todo);
+  } else {
+    res.sendStatus(404);
+  }
+})
+*/
 
+//fs.writeFile
+exports.create = (text, callback) => {
+  counter.getNextUniqueId(function (err, data) {
+    // if error
+
+    // do stuff
+    // else 
+    var text = data
+    items[id] = text;
+    callback(null, { id, text });
+  });
+
+};
+//provide the return of arguments for future function (callback) to use
+
+//fs.readdir
 exports.readAll = (callback) => {
   var data = _.map(items, (text, id) => {
     return { id, text };
@@ -20,6 +41,7 @@ exports.readAll = (callback) => {
   callback(null, data);
 };
 
+//fs.readFile
 exports.readOne = (id, callback) => {
   var text = items[id];
   if (!text) {
@@ -29,6 +51,7 @@ exports.readOne = (id, callback) => {
   }
 };
 
+//fs.writeFile
 exports.update = (id, text, callback) => {
   var item = items[id];
   if (!item) {
@@ -39,6 +62,7 @@ exports.update = (id, text, callback) => {
   }
 };
 
+//fs.unlink
 exports.delete = (id, callback) => {
   var item = items[id];
   delete items[id];

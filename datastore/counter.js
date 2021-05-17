@@ -18,12 +18,15 @@ const zeroPaddedNumber = (num) => {
 const readCounter = (callback) => {
   fs.readFile(exports.counterFile, (err, fileData) => {
     if (err) {
-      callback(null, 0);
+      // callback(null, 0);
+      callback(err, 0);
     } else {
       callback(null, Number(fileData));
     }
   });
 };
+
+
 
 const writeCounter = (count, callback) => {
   var counterString = zeroPaddedNumber(count);
@@ -36,14 +39,36 @@ const writeCounter = (count, callback) => {
   });
 };
 
-// Public API - Fix this function //////////////////////////////////////////////
+/* Public API - Fix this function //////////////////////////////////////////////
+From gLearn:
+Unique Identifier
+All todo entries are identified by an auto-incrementing id. Currently, that id is a counter stored in memory. Your first goal is to save the current state of the counter to the hard drive, so it's persisted between server restarts. Do this by rewriting getNextUniqueId to make use of the provided readCounter and writeCounter functions.
 
-exports.getNextUniqueId = () => {
-  counter = counter + 1;
-  return zeroPaddedNumber(counter);
+Commit your progress: "Complete getNextUniqueId"
+
+mocha test results:
+  getNextUniqueId
+    1) should use error first callback pattern
+    2) should give an id as a zero padded string
+    3) should give the next id based on the count in the file
+    4) should update the counter file with the next value
+*/
+
+
+exports.getNextUniqueId = (callback) => {
+  readCounter(function (err, id) {
+    if (err) {
+      console.log('read error ', err);
+    } else {
+      writeCounter(id + 1, function (err, id) {
+        if (err) {
+          console.log('write error ', err);
+        } else {
+          callback(err, zeroPaddedNumber(id));
+        }
+      });
+  });
 };
-
-
 
 // Configuration -- DO NOT MODIFY //////////////////////////////////////////////
 
