@@ -18,16 +18,44 @@ Todo.readOne(req.params.id, (err, todo) => {
 })
 */
 
-//fs.writeFile
-exports.create = (text, callback) => {
-  counter.getNextUniqueId(function (err, data) {
-    // if error
+// var id = counter.getNextUniqueId();
+// items[id] = text;
+// callback(null, { id, text });
+/*
+  create
+    1) should create a new file for each todo
+    2) should use the generated unique id as the filename
+    3) should only save todo text contents in file
+    4) should pass a todo object to the callback on success
 
-    // do stuff
-    // else 
-    var text = data
-    items[id] = text;
-    callback(null, { id, text });
+
+//fs.writeFile - fs.writeFile( file, data, options, callback )
+options: It is an string or object that can be used to specify optional parameters that will affect the output. It has three optional parameter:
+encoding: It is a string value that specifies the encoding of the file. The default value is ‘utf8’.
+mode: It is an integer value that specifies the file mode. The default value is 0o666.
+flag: It is a string value that specifies the flag used while writing to the file. The default value is ‘w’.
+
+The fs.writeFile() method is used to asynchronously write the specified data to a file.
+By default, the file would be replaced if it exists.
+*/
+exports.create = (text, callback) => {
+  //take the text input write a file to database/location on server
+
+  counter.getNextUniqueId((err, id) => { //data = zeroPaddedNumber(id)
+    // if error
+    if (err) {
+      console.log('error in exports.create - index.js');
+    } else {
+      let filePath = path.join(exports.dataDir, `${id}.txt`);
+      console.log(filePath)
+      fs.writeFile(filePath, text, function(error) {
+        if (error) {
+          console.log('error in .create() index.js: ', error);
+        } else {
+          callback(null, { id, text }); //example found in server.js ln 23  - req.body.todoText
+        }
+      });
+    }
   });
 
 };
@@ -75,7 +103,7 @@ exports.delete = (id, callback) => {
 };
 
 // Config+Initialization code -- DO NOT MODIFY /////////////////////////////////
-
+// =>  ./
 exports.dataDir = path.join(__dirname, 'data');
 
 exports.initialize = () => {

@@ -15,18 +15,15 @@ const zeroPaddedNumber = (num) => {
   return sprintf('%05d', num);
 };
 
-const readCounter = (callback) => {
+const readCounter = (callback) => { //writeCounter => callback
   fs.readFile(exports.counterFile, (err, fileData) => {
     if (err) {
-      // callback(null, 0);
-      callback(err, 0);
+      callback(null, 0);
     } else {
       callback(null, Number(fileData));
     }
   });
 };
-
-
 
 const writeCounter = (count, callback) => {
   var counterString = zeroPaddedNumber(count);
@@ -54,7 +51,6 @@ mocha test results:
     4) should update the counter file with the next value
 */
 
-
 exports.getNextUniqueId = (callback) => {
   readCounter(function (err, id) {
     if (err) {
@@ -67,6 +63,7 @@ exports.getNextUniqueId = (callback) => {
           callback(err, zeroPaddedNumber(id));
         }
       });
+    }
   });
 };
 
